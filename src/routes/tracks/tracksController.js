@@ -1,12 +1,28 @@
 const connexion = require('../../../db-config');
 const db = connexion.promise();
 
-const getOne = (req, res) => {
-  res.status(200).send('Get One route is OK');
+const getOne = async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const tracksById = await db.query('SELECT * from track WHERE id = ?', [id]);
+    res.status(200).json(tracksById[0][0]);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
-const getAll = (req, res) => {
-  res.status(200).send('Get All route is OK');
+const getAll = async (req, res) => {
+  try {
+    const test = await db.query('SELECT * from track');
+    // eslint-disable-next-line no-console
+    console.log(test);
+    res.status(200).json(test[0]);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
 const postTracks = (req, res) => {
