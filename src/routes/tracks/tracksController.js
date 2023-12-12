@@ -43,8 +43,20 @@ const postTracks = (req, res) => {
     });
 };
 
-const updateTracks = (req, res) => {
-  res.status(200).send('Update route is OK');
+const updateTracks = async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { title, youtube_url, id_album } = req.body;
+  try {
+    const updateById = await db.query(
+      'update track SET title = ?, youtube_url = ?, id_album = ? WHERE id = ?',
+      [title, youtube_url, id_album, id]
+    );
+    res.status(200).json(updateById[0]);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
 const deleteTracks = async (req, res) => {
